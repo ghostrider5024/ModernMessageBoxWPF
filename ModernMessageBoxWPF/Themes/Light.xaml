@@ -1,4 +1,28 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <SolidColorBrush x:Key="DialogBackground">white</SolidColorBrush>
+    <!--  Màu background  -->
+    <SolidColorBrush x:Key="ModernMessageBoxBackground">white</SolidColorBrush>
+
+    <!--  Màu chủ đạo  -->
+    <SolidColorBrush x:Key="PrimaryBg">#2196F3</SolidColorBrush>
+    <Color x:Key="PrimaryBg_Color">#2196F3</Color>
+
+    <!--  Màu của chữ  -->
+    <SolidColorBrush x:Key="PrimaryText">White</SolidColorBrush>
+    <Color x:Key="PrimaryText_Color">White</Color>
+
+    <!--  Màu hover  -->
+    <Color x:Key="HoveredPrimaryBg_Color">#1976D2</Color>
+
+    <!--  Màu khi nút được nhấn  -->
+    <SolidColorBrush x:Key="PressedBg">#1565C0</SolidColorBrush>
+    <Color x:Key="PressedBg_Color">#1565C0</Color>
+
+    <!--  Màu background button khi bị disabled  -->
+    <SolidColorBrush x:Key="DisabledBg">#FFB0BEC5</SolidColorBrush>
+
+    <!--  Màu foreground button khi bị disabled  -->
+    <SolidColorBrush x:Key="DisabledForeground">#FFEEEEEE</SolidColorBrush>
+
+
 
 </ResourceDictionary>

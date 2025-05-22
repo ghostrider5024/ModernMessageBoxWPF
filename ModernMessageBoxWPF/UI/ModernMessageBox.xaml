@@ -17,46 +17,223 @@
     WindowStartupLocation="CenterOwner"
     WindowStyle="None"
     mc:Ignorable="d">
-    <!--<Border
-        Padding="24"
-        Background="{DynamicResource DialogBackground}"
-        CornerRadius="10"
-        RenderTransformOrigin="0.5,0.5">
-        <Border.RenderTransform>
-            <ScaleTransform x:Name="Scale" ScaleX="0.8" ScaleY="0.8" />
-        </Border.RenderTransform>
+    <Window.Resources>
+        <Style x:Key="BaseRaisedButtonStyle" TargetType="Button">
+            <Setter Property="FontFamily" Value="Inter" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Padding" Value="16,4" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
 
-        <StackPanel>
-            <TextBlock
-                Margin="0,0,0,10"
-                HorizontalAlignment="Center"
-                FontSize="32"
-                Text="{Binding Type, Converter={StaticResource DialogIconConverter}}" />
-            <TextBlock
-                Margin="0,0,0,8"
-                FontSize="18"
-                FontWeight="Bold"
-                Text="{Binding Title}" />
-            <TextBlock
-                Margin="0,0,0,20"
-                Text="{Binding Message}"
-                TextWrapping="Wrap" />
+        </Style>
 
-            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                <Button Command="{Binding CancelCommand}" Content="Hủy" />
-                <Button Command="{Binding ConfirmCommand}" Content="OK" />
-            </StackPanel>
-        </StackPanel>
-    </Border>-->
+        <Style
+            x:Key="DefaultCancelButtonStyle"
+            BasedOn="{StaticResource BaseRaisedButtonStyle}"
+            TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <!--  Blue  -->
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryBg}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBg}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Content" Value="Hủy" />
+
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="2"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                RecognizesAccessKey="True" />
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+
+                            <!--  Pressed animation  -->
+
+
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation
+                                                Storyboard.TargetName="border"
+                                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                To="{StaticResource HoveredPrimaryBg_Color}"
+                                                Duration="0:0:0.2" />
+                                            <ColorAnimation
+                                                Storyboard.TargetName="border"
+                                                Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
+                                                To="{StaticResource HoveredPrimaryBg_Color}"
+                                                Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation
+                                                Storyboard.TargetName="border"
+                                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                To="{StaticResource PrimaryText_Color}"
+                                                Duration="0:0:0.2" />
+                                            <ColorAnimation
+                                                Storyboard.TargetName="border"
+                                                Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
+                                                To="{StaticResource PrimaryBg_Color}"
+                                                Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                            <!--  Hover animation  -->
+
+                            <!--  Disabled style  -->
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource DisabledBg}" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource DisabledBg}" />
+                                <Setter Property="Foreground" Value="{DynamicResource DisabledForeground}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+                    <Setter Property="Background" Value="{DynamicResource PrimaryBg}" />
+                </Trigger>
+
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+                    <Setter Property="Background" Value="{DynamicResource PressedBg}" />
+                </Trigger>
+            </Style.Triggers>
+
+        </Style>
+
+        <Style
+            x:Key="DefaultConfirmButtonStyle"
+            BasedOn="{StaticResource BaseRaisedButtonStyle}"
+            TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource PrimaryBg}" />
+            <!--  Blue  -->
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBg}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Content" Value="Xác nhận" />
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="2"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                RecognizesAccessKey="True" />
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+
+                            <!--  Pressed animation  -->
+
+
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation
+                                                Storyboard.TargetName="border"
+                                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                To="{StaticResource PressedBg_Color}"
+                                                Duration="0:0:0.2" />
+                                            <ColorAnimation
+                                                Storyboard.TargetName="border"
+                                                Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
+                                                To="{StaticResource PressedBg_Color}"
+                                                Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation
+                                                Storyboard.TargetName="border"
+                                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                To="{StaticResource PrimaryBg_Color}"
+                                                Duration="0:0:0.2" />
+                                            <ColorAnimation
+                                                Storyboard.TargetName="border"
+                                                Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
+                                                To="{StaticResource PrimaryBg_Color}"
+                                                Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                            <!--  Hover animation  -->
+
+                            <!--  Disabled style  -->
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource DisabledBg}" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource DisabledBg}" />
+                                <Setter Property="Foreground" Value="{DynamicResource DisabledForeground}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+                    <Setter Property="Background" Value="{DynamicResource PressedBg}" />
+                </Trigger>
+
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
+                    <Setter Property="Background" Value="{DynamicResource PressedBg}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DefaultRootStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource ModernMessageBoxBackground}" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="15,15,15,10" />
+        </Style>
+
+    </Window.Resources>
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Border
             x:Name="Root"
-            Padding="20"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Background="White"
-            CornerRadius="10"
-            RenderTransformOrigin="0.5,0.5">
+            RenderTransformOrigin="0.5,0.5"
+            Style="{StaticResource DefaultRootStyle}">
             <Border.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform x:Name="Scale" ScaleX="1" ScaleY="1" />
@@ -68,26 +245,28 @@
             <StackPanel>
                 <TextBlock
                     Margin="0,0,0,10"
+                    FontFamily="Inter"
                     FontSize="18"
                     FontWeight="Bold"
                     Text="{Binding Title}" />
                 <TextBlock
                     Margin="0,0,0,20"
+                    FontFamily="Inter"
                     FontSize="14"
                     Text="{Binding Message}"
                     TextWrapping="Wrap" />
 
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                     <Button
-                        Width="80"
+                        MinWidth="80"
                         Margin="5"
                         Command="{Binding CancelCommand}"
-                        Content="Cancel" />
+                        Style="{Binding RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}, Path=CancelButtonStyle}" />
                     <Button
-                        Width="80"
+                        MinWidth="80"
                         Margin="5"
                         Command="{Binding ConfirmCommand}"
-                        Content="OK" />
+                        Style="{Binding RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}, Path=ConfirmButtonStyle}" />
                 </StackPanel>
             </StackPanel>
         </Border>

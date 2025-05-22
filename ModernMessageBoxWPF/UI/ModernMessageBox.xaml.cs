@@ -3,6 +3,7 @@ using System.Windows.Media;
 using System.Windows;
 
 using ModernMessageBoxWPF.Enums;
+using ModernMessageBoxWPF.Models;
 
 namespace ModernMessageBoxWPF.UI
 {
@@ -21,7 +22,7 @@ namespace ModernMessageBoxWPF.UI
             DependencyProperty.Register(nameof(AnimationType)
                 , typeof(ModernMessageBoxAnimationTypeEnum)
                 , typeof(ModernMessageBox)
-                , new PropertyMetadata(ModernMessageBoxAnimationTypeEnum.SlideFromLeft
+                , new PropertyMetadata(ModernMessageBoxAnimationTypeEnum.SlideFromTop
                     , OnAnimationTypeChanged));
         private static void OnAnimationTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -53,6 +54,42 @@ namespace ModernMessageBoxWPF.UI
                 , typeof(TimeSpan)
                 , typeof(ModernMessageBox)
                 , new PropertyMetadata(TimeSpan.FromMilliseconds(250)));
+
+        public Style? RootBorderStyle
+        {
+            get { return (Style)GetValue(RootBorderStyleProperty); }
+            set { SetValue(RootBorderStyleProperty, value); }
+        }
+        public static readonly DependencyProperty RootBorderStyleProperty =
+            DependencyProperty.Register(nameof(RootBorderStyle)
+                , typeof(Style)
+                , typeof(ModernMessageBox)
+                , new PropertyMetadata(default));
+
+
+        public Style? CancelButtonStyle
+        {
+            get { return (Style)GetValue(CancelButtonStyleProperty); }
+            set { SetValue(CancelButtonStyleProperty, value); }
+        }
+        public static readonly DependencyProperty CancelButtonStyleProperty =
+            DependencyProperty.Register(nameof(CancelButtonStyle)
+                , typeof(Style)
+                , typeof(ModernMessageBox)
+                , new PropertyMetadata(default));
+
+        public Style? ConfirmButtonStyle
+        {
+            get { return (Style)GetValue(ConfirmButtonStyleProperty); }
+            set { SetValue(ConfirmButtonStyleProperty, value); }
+        }
+        public static readonly DependencyProperty ConfirmButtonStyleProperty =
+            DependencyProperty.Register(nameof(ConfirmButtonStyle)
+                , typeof(Style)
+                , typeof(ModernMessageBox)
+                , new PropertyMetadata(default));
+
+
         #endregion DP
 
         private bool _allowClose = false;
@@ -88,6 +125,16 @@ namespace ModernMessageBoxWPF.UI
 
         #region Hàm gán giá trị mặc định trước khi chạy hiệu ứng
         
+        public void SetStyle(ModernMessageBoxStyle? style)
+        {
+            RootBorderStyle = style.RootBorderStyle
+                ?? FindResource("DefaultRootStyle") as Style;
+            CancelButtonStyle = style?.CancelButtonStyle 
+                ?? FindResource("DefaultCancelButtonStyle") as Style;
+            ConfirmButtonStyle = style?.ConfirmButtonStyle
+                ?? FindResource("DefaultConfirmButtonStyle") as Style;
+        }
+
         public void SetInitialAnimationState()
         {
             switch (AnimationType)

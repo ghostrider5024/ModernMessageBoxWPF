@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35303.130
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "Demo\Demo.csproj", "{97375BF2-3A44-4780-A789-6B7E08A99D60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo", "Demo\Demo.csproj", "{97375BF2-3A44-4780-A789-6B7E08A99D60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModernMessageBoxWPF", "ModernMessageBoxWPF\ModernMessageBoxWPF.csproj", "{11EEF7DD-12A7-4584-BD68-AF106B20068F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModernMessageBoxWPF", "ModernMessageBoxWPF\ModernMessageBoxWPF.csproj", "{11EEF7DD-12A7-4584-BD68-AF106B20068F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,8 +17,8 @@ Global
 		{97375BF2-3A44-4780-A789-6B7E08A99D60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97375BF2-3A44-4780-A789-6B7E08A99D60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97375BF2-3A44-4780-A789-6B7E08A99D60}.Release|Any CPU.Build.0 = Release|Any CPU
-		{11EEF7DD-12A7-4584-BD68-AF106B20068F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{11EEF7DD-12A7-4584-BD68-AF106B20068F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11EEF7DD-12A7-4584-BD68-AF106B20068F}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{11EEF7DD-12A7-4584-BD68-AF106B20068F}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{11EEF7DD-12A7-4584-BD68-AF106B20068F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11EEF7DD-12A7-4584-BD68-AF106B20068F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

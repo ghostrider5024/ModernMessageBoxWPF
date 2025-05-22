@@ -1,0 +1,95 @@
+﻿<Window
+    x:Class="ModernMessageBoxWPF.UI.ModernMessageBox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ModernMessageBoxWPF.UI"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:ModernMessageBoxWPF.ViewModels"
+    d:DataContext="{d:DesignInstance vm:ModernMessageBoxViewModel}"
+    AllowsTransparency="True"
+    Background="Transparent"
+    Closing="Window_Closing"
+    Loaded="Window_Loaded"
+    ResizeMode="NoResize"
+    ShowInTaskbar="False"
+    SizeToContent="Manual"
+    WindowStartupLocation="CenterOwner"
+    WindowStyle="None"
+    mc:Ignorable="d">
+    <!--<Border
+        Padding="24"
+        Background="{DynamicResource DialogBackground}"
+        CornerRadius="10"
+        RenderTransformOrigin="0.5,0.5">
+        <Border.RenderTransform>
+            <ScaleTransform x:Name="Scale" ScaleX="0.8" ScaleY="0.8" />
+        </Border.RenderTransform>
+
+        <StackPanel>
+            <TextBlock
+                Margin="0,0,0,10"
+                HorizontalAlignment="Center"
+                FontSize="32"
+                Text="{Binding Type, Converter={StaticResource DialogIconConverter}}" />
+            <TextBlock
+                Margin="0,0,0,8"
+                FontSize="18"
+                FontWeight="Bold"
+                Text="{Binding Title}" />
+            <TextBlock
+                Margin="0,0,0,20"
+                Text="{Binding Message}"
+                TextWrapping="Wrap" />
+
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button Command="{Binding CancelCommand}" Content="Hủy" />
+                <Button Command="{Binding ConfirmCommand}" Content="OK" />
+            </StackPanel>
+        </StackPanel>
+    </Border>-->
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Border
+            x:Name="Root"
+            Padding="20"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Background="White"
+            CornerRadius="10"
+            RenderTransformOrigin="0.5,0.5">
+            <Border.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform x:Name="Scale" ScaleX="1" ScaleY="1" />
+                    <RotateTransform x:Name="Rotate" Angle="0" />
+                    <TranslateTransform x:Name="Translate" X="0" Y="0" />
+                </TransformGroup>
+            </Border.RenderTransform>
+
+            <StackPanel>
+                <TextBlock
+                    Margin="0,0,0,10"
+                    FontSize="18"
+                    FontWeight="Bold"
+                    Text="{Binding Title}" />
+                <TextBlock
+                    Margin="0,0,0,20"
+                    FontSize="14"
+                    Text="{Binding Message}"
+                    TextWrapping="Wrap" />
+
+                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                    <Button
+                        Width="80"
+                        Margin="5"
+                        Command="{Binding CancelCommand}"
+                        Content="Cancel" />
+                    <Button
+                        Width="80"
+                        Margin="5"
+                        Command="{Binding ConfirmCommand}"
+                        Content="OK" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

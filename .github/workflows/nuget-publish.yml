@@ -1,0 +1,58 @@
+name: Build & Publish NuGet Package
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Tự động chạy khi bạn push 1 Git tag như v1.0.0
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (optional)'
+        required: false
+        default: 'v1.0.0.0'
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      PROJECT_NAME: ModernMessageBoxWPF
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'  # hoặc 7.0.x nếu bạn dùng net7
+
+    - name: Get version from inputs or tag or fallback
+      id: version
+      run: |
+        if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+          $v = "${{ github.event.inputs.version }}"
+          if ($v.StartsWith("v")) {
+            $v = $v.Substring(1)
+          }
+          echo "version=$v" >> $env:GITHUB_OUTPUT
+        }
+        elseif ($env:GITHUB_REF_TYPE -eq "tag") {
+          $tag = $env:GITHUB_REF_NAME
+          if ($tag.StartsWith("v")) {
+            $tag = $tag.Substring(1)
+          }
+          echo "version=$tag" >> $env:GITHUB_OUTPUT
+        }
+        else {
+          echo "version=0.0.0-preview" >> $env:GITHUB_OUTPUT
+        }
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build ModernMessageBoxWPF/ModernMessageBoxWPF.csproj -c Release
+
+    - name: Pack with version from tag
+      run: dotnet pack ${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}.csproj -c Release -o ./nupkg /p:PackageVersion=${{ steps.version.outputs.version }} --no-build
+
+    - name: Publish to NuGet
+      run: dotnet nuget push ./nupkg/${{ env.PROJECT_NAME }}.${{ steps.version.outputs.version }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json

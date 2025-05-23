@@ -344,6 +344,14 @@
             VerticalAlignment="Center"
             RenderTransformOrigin="0.5,0.5"
             Style="{StaticResource DefaultRootStyle}">
+            <Border.Effect>
+                <DropShadowEffect
+                    BlurRadius="8"
+                    Direction="270"
+                    Opacity="0.2"
+                    ShadowDepth="2"
+                    Color="#19000000" />
+            </Border.Effect>
             <Border.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform x:Name="Scale" ScaleX="1" ScaleY="1" />

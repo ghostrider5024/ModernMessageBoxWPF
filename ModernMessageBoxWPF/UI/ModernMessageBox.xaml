@@ -241,6 +241,7 @@
             <Setter Property="BorderBrush" Value="#BDBDBD" />
             <Setter Property="Background" Value="White" />
             <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="MinHeight" Value="40" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="PasswordBox">
@@ -277,6 +278,7 @@
             <Setter Property="BorderBrush" Value="#BDBDBD" />
             <Setter Property="Background" Value="White" />
             <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="MinHeight" Value="40" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">

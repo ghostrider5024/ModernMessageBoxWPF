@@ -1,6 +1,6 @@
 ﻿namespace ModernMessageBoxWPF.Enums
 {
-    public enum DialogType
+    public enum MessageBoxStateType
     {
         Info,
         Warning,

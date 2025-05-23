@@ -9,10 +9,10 @@ namespace ModernMessageBoxWPF.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
             value switch
             {
-                DialogType.Info => "ℹ️",
-                DialogType.Warning => "⚠️",
-                DialogType.Error => "❌",
-                DialogType.Success => "✅",
+                MessageBoxStateType.Info => "ℹ️",
+                MessageBoxStateType.Warning => "⚠️",
+                MessageBoxStateType.Error => "❌",
+                MessageBoxStateType.Success => "✅",
                 _ => ""
             };
 

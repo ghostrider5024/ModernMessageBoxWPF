@@ -11,14 +11,15 @@ namespace ModernMessageBoxWPF.Managers
     {
         private static ModernMessageBox? dialogHolder;
         public static async Task<bool> ShowDialogAsync(Window? owner
-            , string title, string message, DialogType type = DialogType.Info
+            , string title, string message
+            , MessageBoxStateType type = MessageBoxStateType.Info
             , ModernMessageBoxStyle? style = null)
         {
             var vm = new ModernMessageBoxViewModel(title, message, type);
-            var dialog = dialogHolder ?? new ModernMessageBox();
+            var dialog = new ModernMessageBox(type);
 
             dialog.SetStyle(style);
-
+            dialog.MessageBoxStateType = type;
             dialog.Owner = owner;
             dialog.DataContext = vm;
             

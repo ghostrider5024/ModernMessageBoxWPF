@@ -7,7 +7,7 @@ namespace ModernMessageBoxWPF.ViewModels
     {
         private string _title = "";
         private string _message = "";
-        private DialogType _type;
+        private MessageBoxStateType _type;
 
         public string Title
         {
@@ -21,7 +21,7 @@ namespace ModernMessageBoxWPF.ViewModels
             set => SetProperty(ref _message, value);
         }
 
-        public DialogType Type
+        public MessageBoxStateType Type
         {
             get => _type;
             set => SetProperty(ref _type, value);
@@ -34,7 +34,7 @@ namespace ModernMessageBoxWPF.ViewModels
 
         private readonly TaskCompletionSource<bool> _tcs = new();
 
-        public ModernMessageBoxViewModel(string title, string message, DialogType type)
+        public ModernMessageBoxViewModel(string title, string message, MessageBoxStateType type)
         {
             Title = title;
             Message = message;

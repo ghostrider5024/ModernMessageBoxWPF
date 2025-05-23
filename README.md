@@ -11,7 +11,7 @@ Thiết kế gọn gàng, dễ tích hợp, có thể thay theme và tuỳ biế
 - 🔄 Hỗ trợ `async/await`
 - ⚠️ Hỗ trợ nhiều kiểu thông báo: Thông tin, Cảnh báo, Lỗi, Xác nhận
 - 🧠 Không cần MVVM — gọi thẳng từ `code-behind`
-- 🌈 Dễ tuỳ chỉnh theme qua `ResourceDictionary`
+- 🌈 Dễ tuỳ chỉnh theme qua `BuildThemeURL`
 
 ---
 
@@ -19,39 +19,68 @@ Thiết kế gọn gàng, dễ tích hợp, có thể thay theme và tuỳ biế
 
 ### 1. Thêm Resource vào App.xaml
 
-````xml
+```xml
 <Application.Resources>
     <ResourceDictionary>
-        <ResourceDictionary.MergedDictionaries>
+        <!-- <ResourceDictionary.MergedDictionaries>
             <ResourceDictionary Source="pack://application:,,,/ModernMessageBoxWPF;component/Themes/Light.xaml" />
-        </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary.MergedDictionaries> -->
         <modernMessageBox:ModernMessgeBoxConverter x:Key="DialogIconConverter" />
     </ResourceDictionary>
 </Application.Resources>
+```
 
 ### 2. Show MessageBox bằng
-```csharp
-public class HelloWorld
-{
-    private async void Button_Click(object sender, RoutedEventArgs e)
-    {
-        var cancelButtonStyle =FindResource("CancelButtonStyle") as Style;
-        var result = await ModernMessageBoxManager
-            .ShowDialogAsync(this
-            , "Xác nhận"
-            , "Bạn muốn thoát ứng dụng?"
-            , DialogType.Warning, new ModernMessageBoxWPF.Models.ModernMessageBoxStyle()
-            {
-                CancelButtonStyle = cancelButtonStyle
-            });
 
-        if (result)
-        {
-            Application.Current.Shutdown();
-        }
-    }
-}
-````
+```csharp
+var result = await ModernMessageBoxManager.ShowDialogAsync(
+    ownerWindow,
+    "Tiêu đề Dialog",
+    "Nội dung message muốn hiển thị",
+    MessageBoxStateType.Warning,                    // Loại message box (mặc định Info)
+    ModernMessageBoxInputTypeEnum.Password,         // Kiểu input (mặc định Normal)
+    myCustomStyle,                                  // Style tùy chỉnh (null nếu không dùng)
+    myBuildThemeURLDelegate                         // Delegate build theme URL (null nếu không dùng)
+);
+
+```
+
+## 🧩 Tham số của ShowDialogAsync
+
+| Tham số         | Kiểu dữ liệu                         | Mô tả                                        | Mặc định                               |
+| --------------- | ------------------------------------ | -------------------------------------------- | -------------------------------------- |
+| `owner`         | `Window?`                            | Cửa sổ cha sở hữu dialog                     | `null`                                 |
+| `title`         | `string`                             | Tiêu đề dialog                               | **Bắt buộc**                           |
+| `message`       | `string`                             | Nội dung message                             | **Bắt buộc**                           |
+| `type`          | `MessageBoxStateType`                | Loại message box (Info, Warning, Error, v.v) | `MessageBoxStateType.Info`             |
+| `inputType`     | `ModernMessageBoxInputTypeEnum`      | Kiểu input (Normal, Password, None, v.v)     | `ModernMessageBoxInputTypeEnum.Normal` |
+| `style`         | `ModernMessageBoxStyle?`             | Style tùy chỉnh cho dialog (có thể null)     | `null`                                 |
+| `BuildThemeURL` | `Func<MessageBoxStateType, string>?` | Delegate để build URL theme dựa trên `type`  | `null`                                 |
+
+# ModernMessageBoxStyle
+
+### `ModernMessageBoxStyle` là class để tùy chỉnh style cho các thành phần chính của dialog `ModernMessageBox`.
+
+## Thuộc tính
+
+| Thuộc tính           | Kiểu dữ liệu | Mô tả                                                                               |
+| -------------------- | ------------ | ----------------------------------------------------------------------------------- |
+| `RootBorderStyle`    | `Style`      | Style áp dụng cho phần viền gốc của dialog (ví dụ: border color, radius, shadow...) |
+| `CancelButtonStyle`  | `Style`      | Style cho nút "Cancel" trong dialog (color, font, kích thước,...)                   |
+| `ConfirmButtonStyle` | `Style`      | Style cho nút "Confirm" (OK/Yes) để làm nổi bật nút xác nhận với màu sắc riêng biệt |
+
+## Ví dụ sử dụng
+
+```csharp
+var style = new ModernMessageBoxStyle
+{
+    RootBorderStyle = (Style)Application.Current.FindResource("MyDialogBorderStyle"),
+    CancelButtonStyle = (Style)Application.Current.FindResource("MyCancelButtonStyle"),
+    ConfirmButtonStyle = (Style)Application.Current.FindResource("MyConfirmButtonStyle")
+};
+```
+
+### 3. Các thuộc tính của ModernMessageBox
 
 ## 🧩 Thuộc tính (Dependency Properties)
 
@@ -62,6 +91,9 @@ public class HelloWorld
 | `AnimationOutDuration` | `TimeSpan`                          | `00:00:00.250` | Thời gian chạy animation khi đóng message box.     |
 | `CancelButtonStyle`    | `Style`                             | `00:00:00.250` | Thời gian chạy animation khi đóng message box.     |
 | `AnimationOutDuration` | `TimeSpan`                          | `00:00:00.250` | Thời gian chạy animation khi đóng message box.     |
+| `MessageBoxStateType`  | `ModernMessageBoxAnimationTypeEnum` | `Info`         | Trạng thái của MessageBox                          |
+
+### 4. Các enum được sử dụng
 
 ## ⚙️ Giá trị enum ModernMessageBoxAnimationTypeEnum
 
@@ -75,9 +107,38 @@ public class HelloWorld
 | `SlideFromRight`  | Trượt vào từ bên phải                |
 | `Flip`            | Hiệu ứng lật dạng 3D                 |
 
+## ⚙️ Giá trị enum MessageBoxStateType
+
+| Enum Value | Mô tả                                  |
+| ---------- | -------------------------------------- |
+| `Info`     | Màu chủ đạo xanh nước biển _(default)_ |
+| `Warning`  | Màu chủ đạo xanh cam                   |
+| `Error`    | Màu chủ đạo đỏ                         |
+| `Success`  | Màu chủ đạo xanh lá                    |
+
+## ⚙️ Giá trị enum MessageBoxStateType
+
+| Enum Value      | Mô tả                                                              |
+| --------------- | ------------------------------------------------------------------ |
+| `Normal`        | Chỉ hiện text khi MessageBox đóng trả về bool _(default)_          |
+| `InputText`     | Hiện ra TextBox để nhập text khi MessageBox đóng trả về string     |
+| `InputPassword` | Hiện ra PasswordBox để nhập text khi MessageBox đóng trả về string |
+
+### 5. Các theme có sẵn
+
 ## 🎨 Resource Dictionary - Giao diện Modern cho MessageBox
 
-File `ResourceDictionary.xaml` này chứa tập hợp các brush và màu sắc được sử dụng cho MessageBox kiểu hiện đại. Bạn có thể tái sử dụng các resource này cho bất kỳ nút, hộp thoại, hay thành phần giao diện nào để đảm bảo giao diện nhất quán.
+Chứa tập hợp các brush và màu sắc được sử dụng cho MessageBox kiểu hiện đại. Bạn có thể tái sử dụng các resource này cho bất kỳ nút, hộp thoại, hay thành phần giao diện nào để đảm bảo giao diện nhất quán.
+
+Các theme có sẵn
+| MessageBoxStateType | Địa chỉ |
+| ---------- | -------------------------------------- |
+| `Info` | /Themes/InfoTheme.xaml |
+| `Warning` | /Themes/WarningTheme.xaml |
+| `Error` | /Themes/ErrorTheme.xaml |
+| `Success` | /Themes/SuccessTheme.xaml |
+
+### 📦 Tip cho dev: Có thể custom theme bằng cách truyền hàm trả về URL thông qua `MessageBoxStateType` được truyền trong `ModernMessageBoxManager.ShowDialogAsync`
 
 ## 🧱 Danh sách các resource
 
@@ -96,15 +157,8 @@ File `ResourceDictionary.xaml` này chứa tập hợp các brush và màu sắc
 
 ---
 
-## 🛠️ Gợi ý sử dụng
+> P.S: Vẫn đang viết ạ 😉
 
-- Dùng các resource này trong các `Style` hoặc `ControlTemplate` để dễ bảo trì, thay đổi theme.
-- Khi muốn dùng animation (`ColorAnimation`), nên dùng các key dạng `Color`, không phải `SolidColorBrush`.
+```
 
----
-
-## 📦 Tip cho dev
-
-Kết hợp file này với các `Style` riêng cho `Button`, `TextBlock`, `Window`, v.v. sẽ giúp bạn tạo nên một UI đồng nhất, dễ bảo trì, và chuẩn sản phẩm.
-
-> P.S: Bạn có thể đổi màu ở đây để dễ dàng tạo các theme Dark/Light nếu cần 😉
+```

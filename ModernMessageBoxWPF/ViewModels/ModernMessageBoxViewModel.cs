@@ -6,39 +6,56 @@ namespace ModernMessageBoxWPF.ViewModels
     public class ModernMessageBoxViewModel : ObservableObject
     {
         private string _title = "";
-        private string _message = "";
-        private MessageBoxStateType _type;
-
         public string Title
         {
             get => _title;
             set => SetProperty(ref _title, value);
         }
 
+        private string _message = "";
         public string Message
         {
             get => _message;
             set => SetProperty(ref _message, value);
         }
 
+        private MessageBoxStateType _type;
         public MessageBoxStateType Type
         {
             get => _type;
             set => SetProperty(ref _type, value);
         }
 
+        private ModernMessageBoxInputTypeEnum _inputType;
+        public ModernMessageBoxInputTypeEnum InputType
+        {
+            get { return _inputType; }
+            set { _inputType = value; }
+        }
+
+        private object _value;
+        public object Value
+        {
+            get => _value;
+            set => SetProperty(ref _value, value);
+        }
+
+
         public Action CloseAction { get; set; }
 
         public ICommand ConfirmCommand { get; set; }
         public ICommand CancelCommand { get; set; }
 
-        private readonly TaskCompletionSource<bool> _tcs = new();
+        private readonly TaskCompletionSource<object> _tcs = new();
 
-        public ModernMessageBoxViewModel(string title, string message, MessageBoxStateType type)
+        public ModernMessageBoxViewModel(string title, string message
+            , MessageBoxStateType type
+            , ModernMessageBoxInputTypeEnum inputType)
         {
             Title = title;
             Message = message;
             Type = type;
+            InputType = inputType;  
 
             ConfirmCommand = new RelayCommand(OnConfirmCommand);
             CancelCommand = new RelayCommand(OnCancelCommand);
@@ -46,17 +63,21 @@ namespace ModernMessageBoxWPF.ViewModels
 
         private void OnConfirmCommand()
         {
-            _tcs.TrySetResult(true);
+            var result = InputType == ModernMessageBoxInputTypeEnum.Normal 
+                ? true : Value;
+            _tcs.TrySetResult(result);
             CloseAction?.Invoke();
         }
 
         private void OnCancelCommand() 
         {
-            _tcs.TrySetResult(false);
+            var result = InputType == ModernMessageBoxInputTypeEnum.Normal
+                ? false : default;
+            _tcs.TrySetResult(result);
             CloseAction?.Invoke();
         }
 
 
-        public Task<bool> WaitForResultAsync() => _tcs.Task;
+        public Task<object> WaitForResultAsync() => _tcs.Task;
     }
 }

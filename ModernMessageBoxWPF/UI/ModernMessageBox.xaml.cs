@@ -184,7 +184,7 @@ namespace ModernMessageBoxWPF.UI
         
         public void SetStyle(ModernMessageBoxStyle? style)
         {
-            RootBorderStyle = style.RootBorderStyle
+            RootBorderStyle = style?.RootBorderStyle
                 ?? FindResource("DefaultRootStyle") as Style;
             CancelButtonStyle = style?.CancelButtonStyle 
                 ?? FindResource("DefaultCancelButtonStyle") as Style;

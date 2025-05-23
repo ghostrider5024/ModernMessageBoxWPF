@@ -27,7 +27,7 @@ namespace ModernMessageBoxWPF.UI
         private static void OnAnimationTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var component = d as ModernMessageBox;
-            if ((bool)e.NewValue && component != null)
+            if (component != null)
             {
                 component.SetInitialAnimationState();
             }
@@ -66,7 +66,6 @@ namespace ModernMessageBoxWPF.UI
                 , typeof(ModernMessageBox)
                 , new PropertyMetadata(default));
 
-
         public Style? CancelButtonStyle
         {
             get { return (Style)GetValue(CancelButtonStyleProperty); }
@@ -90,6 +89,46 @@ namespace ModernMessageBoxWPF.UI
                 , new PropertyMetadata(default));
 
 
+        public MessageBoxStateType MessageBoxStateType
+        {
+            get { return (MessageBoxStateType)GetValue(MessageBoxStateTypeProperty); }
+            set { SetValue(MessageBoxStateTypeProperty, value); }
+        }
+        public static readonly DependencyProperty MessageBoxStateTypeProperty =
+            DependencyProperty.Register(nameof(MessageBoxStateType)
+                , typeof(MessageBoxStateType)
+                , typeof(ModernMessageBox)
+                , new PropertyMetadata(MessageBoxStateType.Info, OnMessageBoxStateTypeChanged));
+
+        private static void OnMessageBoxStateTypeChanged(DependencyObject d
+            , DependencyPropertyChangedEventArgs e)
+        {
+            var component = d as ModernMessageBox;
+            if (component != null)
+            {
+                var type = (MessageBoxStateType) e.NewValue;
+                component.Resources.MergedDictionaries.Clear();
+                component.Resources.MergedDictionaries.Add(component.GetThemeFromType(type));
+            }
+        }
+
+        private void InitTheme()
+        {
+            Resources.MergedDictionaries.Add(GetThemeFromType(MessageBoxStateType));
+        }
+
+        private ResourceDictionary GetThemeFromType(MessageBoxStateType type)
+        {
+            string file = type.ToString() + "Theme.xaml";
+            var dict = new ResourceDictionary
+            {
+                Source = new Uri($"pack://application:,,,/ModernMessageBoxWPF;component/Themes/{file}", UriKind.Absolute)
+            };
+            return dict;
+        }
+
+
+
         #endregion DP
 
         private bool _allowClose = false;
@@ -98,6 +137,16 @@ namespace ModernMessageBoxWPF.UI
 
         public ModernMessageBox()
         {
+            InitTheme();
+            InitializeComponent();
+            Scale.ScaleX = 0.8;
+            Scale.ScaleY = 0.8; 
+        }
+
+        public ModernMessageBox(MessageBoxStateType messageBoxStateType)
+        {
+            MessageBoxStateType = messageBoxStateType;
+            InitTheme();
             InitializeComponent();
             Scale.ScaleX = 0.8;
             Scale.ScaleY = 0.8;

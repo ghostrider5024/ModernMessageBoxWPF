@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="ModernMessageBoxBackground">white</SolidColorBrush>
+    <SolidColorBrush x:Key="PrimaryBg">#FFC107</SolidColorBrush>
+    <Color x:Key="PrimaryBg_Color">#FFC107</Color>
+    <SolidColorBrush x:Key="PrimaryText">White</SolidColorBrush>
+    <Color x:Key="PrimaryText_Color">White</Color>
+    <Color x:Key="HoveredPrimaryBg_Color">#FFA000</Color>
+    <SolidColorBrush x:Key="PressedBg">#FF8F00</SolidColorBrush>
+    <Color x:Key="PressedBg_Color">#FF8F00</Color>
+    <SolidColorBrush x:Key="DisabledBg">#FFB0BEC5</SolidColorBrush>
+    <SolidColorBrush x:Key="DisabledForeground">#FFEEEEEE</SolidColorBrush>
+</ResourceDictionary>

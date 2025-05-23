@@ -112,6 +112,9 @@ namespace ModernMessageBoxWPF.UI
             }
         }
 
+        public Func<MessageBoxStateType, string>? BuildThemeURL { get; set; }
+
+        #endregion DP
         private void InitTheme()
         {
             Resources.MergedDictionaries.Add(GetThemeFromType(MessageBoxStateType));
@@ -119,17 +122,22 @@ namespace ModernMessageBoxWPF.UI
 
         private ResourceDictionary GetThemeFromType(MessageBoxStateType type)
         {
-            string file = type.ToString() + "Theme.xaml";
+            var themeURL = BuildThemeURL != null 
+                ? BuildThemeURL(type) 
+                : BuildDefaultThemeURL(type);
+           
             var dict = new ResourceDictionary
             {
-                Source = new Uri($"pack://application:,,,/ModernMessageBoxWPF;component/Themes/{file}", UriKind.Absolute)
+                Source = new Uri(themeURL, UriKind.Absolute)
             };
             return dict;
         }
 
-
-
-        #endregion DP
+        private string BuildDefaultThemeURL(MessageBoxStateType type)
+        {
+            string file = type.ToString() + "Theme.xaml";
+            return $"pack://application:,,,/ModernMessageBoxWPF;component/Themes/{file}";
+        }
 
         private bool _allowClose = false;
 

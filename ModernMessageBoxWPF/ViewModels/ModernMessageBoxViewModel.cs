@@ -71,8 +71,8 @@ namespace ModernMessageBoxWPF.ViewModels
 
         private void OnCancelCommand() 
         {
-            var result = InputType == ModernMessageBoxInputTypeEnum.Normal
-                ? false : default;
+            object result = InputType == ModernMessageBoxInputTypeEnum.Normal
+                ? false : null;
             _tcs.TrySetResult(result);
             CloseAction?.Invoke();
         }

@@ -1,15 +1,7 @@
-﻿using ModernMessageBoxWPF.Enums;
+﻿using System.Windows;
+
 using ModernMessageBoxWPF.Managers;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using ModernMessageBoxWPF.Enums;
 
 namespace Demo
 {
@@ -25,12 +17,22 @@ namespace Demo
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            var cancelButtonStyle =FindResource("CancelButtonStyle") as Style;
             var result = await ModernMessageBoxManager
-                .ShowDialogAsync(this, "Xác nhận", "Bạn muốn thoát ứng dụng?", DialogType.Warning);
-            if (result)
-            {
-                Application.Current.Shutdown();
-            }
+                .ShowDialogAsync(this
+                , "Xác nhận"
+                , "Bạn muốn thoát ứng dụng?"
+                , MessageBoxStateType.Success
+                , ModernMessageBoxInputTypeEnum.InputText
+                , new ModernMessageBoxWPF.Models.ModernMessageBoxStyle()
+                {
+                    //CancelButtonStyle = cancelButtonStyle
+                });
+            var temp = 2;
+            //if (result)
+            //{
+            //    Application.Current.Shutdown();
+            //}
         }
     }
 }

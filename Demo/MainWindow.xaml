@@ -9,6 +9,12 @@
     Width="800"
     Height="450"
     mc:Ignorable="d">
+    <Window.Resources>
+        <Style x:Key="CancelButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Red" />
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Button Click="Button_Click">1232</Button>
     </Grid>

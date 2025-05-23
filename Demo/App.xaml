@@ -9,7 +9,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/ModernMessageBoxWPF;component/Themes/Light.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/ModernMessageBoxWPF;component/Themes/Light.xaml" />-->
             </ResourceDictionary.MergedDictionaries>
             <modernMessageBox:ModernMessgeBoxConverter x:Key="DialogIconConverter" />
         </ResourceDictionary>

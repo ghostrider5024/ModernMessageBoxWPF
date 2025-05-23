@@ -230,6 +230,8 @@
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Border
             x:Name="Root"
+            MinWidth="320"
+            MinHeight="220"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             RenderTransformOrigin="0.5,0.5"
@@ -242,21 +244,38 @@
                 </TransformGroup>
             </Border.RenderTransform>
 
-            <StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="8*" />
+                </Grid.RowDefinitions>
+
                 <TextBlock
+                    Grid.Row="0"
                     Margin="0,0,0,10"
                     FontFamily="Inter"
                     FontSize="18"
-                    FontWeight="Bold"
-                    Text="{Binding Title}" />
+                    FontWeight="Bold">
+                    <Run Foreground="{DynamicResource PrimaryBg}" Text="{Binding Type, Mode=OneWay, Converter={StaticResource DialogIconConverter}}" />
+                    <Run Foreground="{DynamicResource PrimaryBg}" Text="{Binding Title, Mode=OneWay}" />
+
+                </TextBlock>
                 <TextBlock
+                    Grid.Row="2"
                     Margin="0,0,0,20"
                     FontFamily="Inter"
                     FontSize="14"
-                    Text="{Binding Message}"
+                    Text="{Binding Message, Mode=OneWay}"
                     TextWrapping="Wrap" />
 
-                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <StackPanel
+                    Grid.Row="4"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Orientation="Horizontal">
                     <Button
                         MinWidth="80"
                         Margin="5"
@@ -268,7 +287,7 @@
                         Command="{Binding ConfirmCommand}"
                         Style="{Binding RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}, Path=ConfirmButtonStyle}" />
                 </StackPanel>
-            </StackPanel>
+            </Grid>
         </Border>
     </Grid>
 </Window>

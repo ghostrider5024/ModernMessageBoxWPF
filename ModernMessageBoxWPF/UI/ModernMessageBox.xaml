@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="clr-namespace:ModernMessageBoxWPF.Behaviors"
+    xmlns:converters="clr-namespace:ModernMessageBoxWPF.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:ModernMessageBoxWPF.UI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -20,6 +21,10 @@
     WindowStyle="None"
     mc:Ignorable="d">
     <Window.Resources>
+
+        <converters:ModernMessgeBoxConverter x:Key="DialogIconConverter" />
+
+
         <Style x:Key="BaseRaisedButtonStyle" TargetType="Button">
             <Setter Property="FontFamily" Value="Inter" />
             <Setter Property="FontSize" Value="14" />
@@ -231,7 +236,7 @@
         <Style x:Key="ModernPasswordBox" TargetType="PasswordBox">
             <Setter Property="Foreground" Value="#212121" />
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="Padding" Value="10,6" />
+            <Setter Property="Padding" Value="10" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="#BDBDBD" />
             <Setter Property="Background" Value="White" />
@@ -267,7 +272,7 @@
         <Style x:Key="ModernTextBox" TargetType="TextBox">
             <Setter Property="Foreground" Value="#212121" />
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="Padding" Value="10,6" />
+            <Setter Property="Padding" Value="10" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="#BDBDBD" />
             <Setter Property="Background" Value="White" />
@@ -305,7 +310,6 @@
             <selectors:InputTypeTemplateSelector.NormalTemplate>
                 <DataTemplate>
                     <TextBlock
-                        Margin="0,0,0,20"
                         FontFamily="Inter"
                         FontSize="14"
                         Text="{Binding DataContext.Message, RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}}"
@@ -316,7 +320,7 @@
             <selectors:InputTypeTemplateSelector.InputTextTemplate>
                 <DataTemplate>
                     <TextBox
-                        Margin="0,0,0,20"
+                        behaviors:FocusExtension.IsFocused="True"
                         Style="{StaticResource ModernTextBox}"
                         Text="{Binding DataContext.Value, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}}" />
                 </DataTemplate>
@@ -325,7 +329,7 @@
             <selectors:InputTypeTemplateSelector.InputPasswordTemplate>
                 <DataTemplate>
                     <PasswordBox
-                        Margin="0,0,0,20"
+                        behaviors:FocusExtension.IsFocused="True"
                         behaviors:PasswordBoxHelper.BindPassword="True"
                         behaviors:PasswordBoxHelper.BoundPassword="{Binding DataContext.Value, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}}"
                         Style="{StaticResource ModernPasswordBox}" />
@@ -365,7 +369,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="10" />
                     <RowDefinition Height="auto" />
-                    <RowDefinition Height="10" />
+                    <RowDefinition Height="20" />
                     <RowDefinition Height="8*" />
                 </Grid.RowDefinitions>
 
@@ -380,30 +384,6 @@
                     <Run Foreground="{DynamicResource PrimaryBg}" Text="{Binding Title, Mode=OneWay}" />
 
                 </TextBlock>
-
-                <!--<TextBlock
-                    Grid.Row="2"
-                    Margin="0,0,0,20"
-                    FontFamily="Inter"
-                    FontSize="14"
-                    Text="{Binding Message, Mode=OneWay}"
-                    TextWrapping="Wrap" />
-
-                <TextBox
-                    Grid.Row="2"
-                    Height="auto"
-                    Margin="0,0,0,20"
-                    behaviors:PasswordBoxHelper.BindPassword="True"
-                    behaviors:PasswordBoxHelper.BoundPassword="{Binding Value, Mode=TwoWay}"
-                    Style="{StaticResource ModernTextBox}" />
-
-                <PasswordBox
-                    Grid.Row="2"
-                    Height="auto"
-                    Margin="0,0,0,20"
-                    behaviors:PasswordBoxHelper.BindPassword="True"
-                    behaviors:PasswordBoxHelper.BoundPassword="{Binding Value, Mode=TwoWay}"
-                    Style="{StaticResource ModernPasswordBox}" />-->
 
                 <ContentControl
                     Grid.Row="2"
@@ -420,11 +400,13 @@
                         MinWidth="80"
                         Margin="5"
                         Command="{Binding CancelCommand}"
+                        IsCancel="True"
                         Style="{Binding RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}, Path=CancelButtonStyle}" />
                     <Button
                         MinWidth="80"
                         Margin="5"
                         Command="{Binding ConfirmCommand}"
+                        IsDefault="True"
                         Style="{Binding RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}, Path=ConfirmButtonStyle}" />
                 </StackPanel>
             </Grid>

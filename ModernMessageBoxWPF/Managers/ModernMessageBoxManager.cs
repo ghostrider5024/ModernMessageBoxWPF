@@ -31,6 +31,7 @@ namespace ModernMessageBoxWPF.Managers
             vm.CloseAction = () => dialog.Close();
             dialog.ShowDialog(); // blocking nhưng ta đợi task
             var result = await vm.WaitForResultAsync();
+            dialog.Owner = null;
             return result;
         }
     }

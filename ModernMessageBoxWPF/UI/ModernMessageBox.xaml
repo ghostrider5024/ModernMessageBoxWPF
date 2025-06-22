@@ -324,7 +324,7 @@
                     <TextBox
                         behaviors:FocusExtension.IsFocused="True"
                         Style="{StaticResource ModernTextBox}"
-                        Text="{Binding DataContext.Value, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}}" />
+                        Text="{Binding DataContext.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}}" />
                 </DataTemplate>
             </selectors:InputTypeTemplateSelector.InputTextTemplate>
 
@@ -333,7 +333,7 @@
                     <PasswordBox
                         behaviors:FocusExtension.IsFocused="True"
                         behaviors:PasswordBoxHelper.BindPassword="True"
-                        behaviors:PasswordBoxHelper.BoundPassword="{Binding DataContext.Value, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}}"
+                        behaviors:PasswordBoxHelper.BoundPassword="{Binding DataContext.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}}"
                         Style="{StaticResource ModernPasswordBox}" />
                 </DataTemplate>
             </selectors:InputTypeTemplateSelector.InputPasswordTemplate>

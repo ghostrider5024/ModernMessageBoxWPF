@@ -9,7 +9,6 @@ namespace ModernMessageBoxWPF.Managers
 {
     public static class ModernMessageBoxManager
     {
-        private static ModernMessageBox? dialogHolder;
         public static async Task<object> ShowDialogAsync(Window? owner
             , string title, string message
             , MessageBoxStateType type = MessageBoxStateType.Info
@@ -19,11 +18,9 @@ namespace ModernMessageBoxWPF.Managers
         {
             var vm = new ModernMessageBoxViewModel(title, message
                 , type, inputType);
-            var dialog = new ModernMessageBox(type);
+            var dialog = new ModernMessageBox(type, BuildThemeURL);
 
             dialog.SetStyle(style);
-            dialog.MessageBoxStateType = type;
-            dialog.BuildThemeURL = BuildThemeURL;
 
             dialog.Owner = owner;
             dialog.DataContext = vm;

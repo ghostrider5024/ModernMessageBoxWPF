@@ -1,6 +1,8 @@
 ﻿using System.Windows.Media.Animation;
 using System.Windows.Media;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 using ModernMessageBoxWPF.Enums;
 using ModernMessageBoxWPF.Models;
@@ -42,7 +44,7 @@ namespace ModernMessageBoxWPF.UI
             DependencyProperty.Register(nameof(AnimationInDuration)
                 , typeof(TimeSpan)
                 , typeof(ModernMessageBox)
-                , new PropertyMetadata(TimeSpan.FromMilliseconds(250)));
+                , new PropertyMetadata(TimeSpan.FromMilliseconds(180)));
 
         public TimeSpan AnimationOutDuration
         {
@@ -53,7 +55,7 @@ namespace ModernMessageBoxWPF.UI
             DependencyProperty.Register(nameof(AnimationOutDuration)
                 , typeof(TimeSpan)
                 , typeof(ModernMessageBox)
-                , new PropertyMetadata(TimeSpan.FromMilliseconds(250)));
+                , new PropertyMetadata(TimeSpan.FromMilliseconds(160)));
 
         public Style? RootBorderStyle
         {
@@ -117,6 +119,7 @@ namespace ModernMessageBoxWPF.UI
         #endregion DP
         private void InitTheme()
         {
+            Resources.MergedDictionaries.Clear();
             Resources.MergedDictionaries.Add(GetThemeFromType(MessageBoxStateType));
         }
 
@@ -140,22 +143,27 @@ namespace ModernMessageBoxWPF.UI
         }
 
         private bool _allowClose = false;
+        private bool _isClosing;
 
         private Dictionary<string, Storyboard> _cachedStoryboards = new();
 
         public ModernMessageBox()
+            : this(MessageBoxStateType.Info)
         {
-            InitTheme();
-            InitializeComponent();
-            Scale.ScaleX = 0.8;
-            Scale.ScaleY = 0.8; 
         }
 
-        public ModernMessageBox(MessageBoxStateType messageBoxStateType)
+        public ModernMessageBox(
+            MessageBoxStateType messageBoxStateType,
+            Func<MessageBoxStateType, string>? buildThemeURL = null)
         {
-            MessageBoxStateType = messageBoxStateType;
-            InitTheme();
             InitializeComponent();
+
+            BuildThemeURL = buildThemeURL;
+            if (MessageBoxStateType == messageBoxStateType)
+                InitTheme();
+            else
+                MessageBoxStateType = messageBoxStateType;
+
             Scale.ScaleX = 0.8;
             Scale.ScaleY = 0.8;
         }
@@ -177,7 +185,47 @@ namespace ModernMessageBoxWPF.UI
             if (_allowClose) return;
             e.Cancel = true;
 
+            if (_isClosing) return;
+            _isClosing = true;
             RunAnimationOut();
+        }
+
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                if (CancelButton.IsCancel && ActivateButton(CancelButton))
+                {
+                    e.Handled = true;
+                }
+
+                return;
+            }
+
+            if (e.Key == Key.Enter && !e.IsRepeat && ConfirmButton.IsDefault && ActivateButton(ConfirmButton))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private static bool ActivateButton(Button button)
+        {
+            if (!button.IsEnabled)
+                return false;
+
+            if (button.Command is { } command)
+            {
+                if (!command.CanExecute(button.CommandParameter))
+                    return false;
+
+                command.Execute(button.CommandParameter);
+            }
+            else
+            {
+                button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            }
+
+            return true;
         }
 
         #region Hàm gán giá trị mặc định trước khi chạy hiệu ứng
@@ -194,6 +242,9 @@ namespace ModernMessageBoxWPF.UI
 
         public void SetInitialAnimationState()
         {
+            if (Root == null)
+                return;
+
             switch (AnimationType)
             {
                 case ModernMessageBoxAnimationTypeEnum.Fade:
@@ -252,7 +303,7 @@ namespace ModernMessageBoxWPF.UI
 
         private Storyboard CreateStoryboardIn()
         {
-            string key = $"In_{AnimationType}";
+            string key = $"In_{AnimationType}_{AnimationInDuration.Ticks}";
             if (_cachedStoryboards.TryGetValue(key, out var cached))
                 return cached;
 
@@ -274,11 +325,10 @@ namespace ModernMessageBoxWPF.UI
                     double fromY = AnimationType == ModernMessageBoxAnimationTypeEnum.SlideFromBottom ? 100 : -100;
                     var verticalSlideAnim = new DoubleAnimation(fromY, 0, sb.Duration) 
                     { 
-                        EasingFunction = new BackEase() 
-                        { 
-                            EasingMode = EasingMode.EaseOut,
-                            Amplitude = 0.2
-                        } 
+                        EasingFunction = new CubicEase()
+                        {
+                            EasingMode = EasingMode.EaseOut
+                        }
                     };
                     Storyboard.SetTargetProperty(verticalSlideAnim, new PropertyPath("(UIElement.RenderTransform).(TranslateTransform.Y)"));
                     AddOpacityAnimation(sb, 0, 1);
@@ -291,10 +341,9 @@ namespace ModernMessageBoxWPF.UI
                         double fromX = AnimationType == ModernMessageBoxAnimationTypeEnum.SlideFromRight ? 100 : -100;
                         var horizontalSlideAnim = new DoubleAnimation(fromX, 0, sb.Duration)
                         {
-                            EasingFunction = new BackEase()
+                            EasingFunction = new CubicEase()
                             {
-                                EasingMode = EasingMode.EaseOut,
-                                Amplitude = 0.2
+                                EasingMode = EasingMode.EaseOut
                             }
                         };
                         Storyboard.SetTargetProperty(horizontalSlideAnim, new PropertyPath("(UIElement.RenderTransform).(TranslateTransform.X)"));
@@ -328,7 +377,7 @@ namespace ModernMessageBoxWPF.UI
         }
         private Storyboard CreateStoryboardOut()
         {
-            string key = $"Out_{AnimationType}";
+            string key = $"Out_{AnimationType}_{AnimationOutDuration.Ticks}";
             if (_cachedStoryboards.TryGetValue(key, out var cached))
                 return cached;
 
@@ -350,9 +399,8 @@ namespace ModernMessageBoxWPF.UI
                     double toY = AnimationType == ModernMessageBoxAnimationTypeEnum.SlideFromBottom ? 100 : -100;
                     var verticalSlideAnim = new DoubleAnimation(0, toY, sb.Duration) 
                     { 
-                        EasingFunction = new BackEase()
+                        EasingFunction = new CubicEase()
                         {
-                            Amplitude = 0.2,
                             EasingMode = EasingMode.EaseIn
                         }
                     };
@@ -366,9 +414,8 @@ namespace ModernMessageBoxWPF.UI
                     double toX = AnimationType == ModernMessageBoxAnimationTypeEnum.SlideFromRight ? 100 : -100;
                     var horizontalSlideAmin = new DoubleAnimation(0, toX, sb.Duration)
                     {
-                        EasingFunction = new BackEase()
+                        EasingFunction = new CubicEase()
                         {
-                            Amplitude = 0.2,
                             EasingMode = EasingMode.EaseIn
                         }
                     };

@@ -14,9 +14,12 @@
     Background="Transparent"
     Closing="Window_Closing"
     Loaded="Window_Loaded"
+    PreviewKeyDown="Window_PreviewKeyDown"
     ResizeMode="NoResize"
     ShowInTaskbar="False"
     SizeToContent="Manual"
+    TextOptions.TextFormattingMode="Display"
+    UseLayoutRounding="True"
     WindowStartupLocation="CenterOwner"
     WindowStyle="None"
     mc:Ignorable="d">
@@ -25,16 +28,46 @@
         <converters:ModernMessgeBoxConverter x:Key="DialogIconConverter" />
 
 
+        <ControlTemplate x:Key="DialogButtonTemplate" TargetType="Button">
+            <Border
+                x:Name="ButtonBorder"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="7"
+                SnapsToDevicePixels="True">
+                <ContentPresenter
+                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                    RecognizesAccessKey="True" />
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.88" />
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.72" />
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="{DynamicResource PrimaryBg}" />
+                    <Setter TargetName="ButtonBorder" Property="BorderThickness" Value="2" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.45" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
         <Style x:Key="BaseRaisedButtonStyle" TargetType="Button">
-            <Setter Property="FontFamily" Value="Inter" />
+            <Setter Property="FontFamily" Value="Segoe UI" />
             <Setter Property="FontSize" Value="14" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Padding" Value="16,4" />
-            <Setter Property="Height" Value="32" />
+            <Setter Property="Padding" Value="14,0" />
+            <Setter Property="Height" Value="36" />
             <Setter Property="SnapsToDevicePixels" Value="True" />
-
+            <Setter Property="Template" Value="{StaticResource DialogButtonTemplate}" />
         </Style>
 
         <Style
@@ -42,95 +75,11 @@
             BasedOn="{StaticResource BaseRaisedButtonStyle}"
             TargetType="Button">
             <Setter Property="Background" Value="Transparent" />
-            <!--  Blue  -->
             <Setter Property="Foreground" Value="{DynamicResource PrimaryBg}" />
             <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBg}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Content" Value="Hủy" />
-
-
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border
-                            x:Name="border"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="2"
-                            SnapsToDevicePixels="True">
-                            <ContentPresenter
-                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                RecognizesAccessKey="True" />
-                        </Border>
-
-                        <ControlTemplate.Triggers>
-
-                            <!--  Pressed animation  -->
-
-
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Trigger.EnterActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <ColorAnimation
-                                                Storyboard.TargetName="border"
-                                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                To="{StaticResource HoveredPrimaryBg_Color}"
-                                                Duration="0:0:0.2" />
-                                            <ColorAnimation
-                                                Storyboard.TargetName="border"
-                                                Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-                                                To="{StaticResource HoveredPrimaryBg_Color}"
-                                                Duration="0:0:0.2" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.EnterActions>
-                                <Trigger.ExitActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <ColorAnimation
-                                                Storyboard.TargetName="border"
-                                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                To="{StaticResource PrimaryText_Color}"
-                                                Duration="0:0:0.2" />
-                                            <ColorAnimation
-                                                Storyboard.TargetName="border"
-                                                Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-                                                To="{StaticResource PrimaryBg_Color}"
-                                                Duration="0:0:0.2" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.ExitActions>
-                            </Trigger>
-                            <!--  Hover animation  -->
-
-                            <!--  Disabled style  -->
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="border" Property="Background" Value="{DynamicResource DisabledBg}" />
-                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource DisabledBg}" />
-                                <Setter Property="Foreground" Value="{DynamicResource DisabledForeground}" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-
-            </Setter>
-
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
-                    <Setter Property="Background" Value="{DynamicResource PrimaryBg}" />
-                </Trigger>
-
-                <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
-                    <Setter Property="Background" Value="{DynamicResource PressedBg}" />
-                </Trigger>
-            </Style.Triggers>
-
         </Style>
 
         <Style
@@ -138,110 +87,31 @@
             BasedOn="{StaticResource BaseRaisedButtonStyle}"
             TargetType="Button">
             <Setter Property="Background" Value="{DynamicResource PrimaryBg}" />
-            <!--  Blue  -->
             <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
             <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBg}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Content" Value="Xác nhận" />
-
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border
-                            x:Name="border"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="2"
-                            SnapsToDevicePixels="True">
-                            <ContentPresenter
-                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                RecognizesAccessKey="True" />
-                        </Border>
-
-                        <ControlTemplate.Triggers>
-
-                            <!--  Pressed animation  -->
-
-
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Trigger.EnterActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <ColorAnimation
-                                                Storyboard.TargetName="border"
-                                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                To="{StaticResource PressedBg_Color}"
-                                                Duration="0:0:0.2" />
-                                            <ColorAnimation
-                                                Storyboard.TargetName="border"
-                                                Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-                                                To="{StaticResource PressedBg_Color}"
-                                                Duration="0:0:0.2" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.EnterActions>
-                                <Trigger.ExitActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <ColorAnimation
-                                                Storyboard.TargetName="border"
-                                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                To="{StaticResource PrimaryBg_Color}"
-                                                Duration="0:0:0.2" />
-                                            <ColorAnimation
-                                                Storyboard.TargetName="border"
-                                                Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-                                                To="{StaticResource PrimaryBg_Color}"
-                                                Duration="0:0:0.2" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.ExitActions>
-                            </Trigger>
-                            <!--  Hover animation  -->
-
-                            <!--  Disabled style  -->
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="border" Property="Background" Value="{DynamicResource DisabledBg}" />
-                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource DisabledBg}" />
-                                <Setter Property="Foreground" Value="{DynamicResource DisabledForeground}" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-
-            </Setter>
-
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
-                    <Setter Property="Background" Value="{DynamicResource PressedBg}" />
-                </Trigger>
-
-                <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Foreground" Value="{DynamicResource PrimaryText}" />
-                    <Setter Property="Background" Value="{DynamicResource PressedBg}" />
-                </Trigger>
-            </Style.Triggers>
         </Style>
 
         <Style x:Key="DefaultRootStyle" TargetType="Border">
             <Setter Property="Background" Value="{DynamicResource ModernMessageBoxBackground}" />
-            <Setter Property="CornerRadius" Value="10" />
-            <Setter Property="Padding" Value="15,15,15,10" />
+            <Setter Property="BorderBrush" Value="#E8EAED" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Padding" Value="20,20,20,20" />
         </Style>
 
         <Style x:Key="ModernPasswordBox" TargetType="PasswordBox">
-            <Setter Property="Foreground" Value="#212121" />
+            <Setter Property="Foreground" Value="#202124" />
+            <Setter Property="FontFamily" Value="Segoe UI" />
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="Padding" Value="10" />
+            <Setter Property="Padding" Value="10,8" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="#BDBDBD" />
+            <Setter Property="BorderBrush" Value="#DADCE0" />
             <Setter Property="Background" Value="White" />
             <Setter Property="SnapsToDevicePixels" Value="True" />
-            <Setter Property="MinHeight" Value="40" />
+            <Setter Property="MinHeight" Value="38" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="PasswordBox">
@@ -250,7 +120,7 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="4">
+                            CornerRadius="6">
                             <ScrollViewer
                                 x:Name="PART_ContentHost"
                                 Margin="0"
@@ -259,7 +129,6 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsFocused" Value="True">
                                 <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource PrimaryBg}" />
-                                <Setter TargetName="Border" Property="BorderThickness" Value="2" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" Value="0.5" />
@@ -271,14 +140,15 @@
         </Style>
 
         <Style x:Key="ModernTextBox" TargetType="TextBox">
-            <Setter Property="Foreground" Value="#212121" />
+            <Setter Property="Foreground" Value="#202124" />
+            <Setter Property="FontFamily" Value="Segoe UI" />
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="Padding" Value="10" />
+            <Setter Property="Padding" Value="10,8" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="#BDBDBD" />
+            <Setter Property="BorderBrush" Value="#DADCE0" />
             <Setter Property="Background" Value="White" />
             <Setter Property="SnapsToDevicePixels" Value="True" />
-            <Setter Property="MinHeight" Value="40" />
+            <Setter Property="MinHeight" Value="38" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
@@ -287,7 +157,7 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="4">
+                            CornerRadius="6">
                             <ScrollViewer
                                 x:Name="PART_ContentHost"
                                 Margin="0"
@@ -296,7 +166,6 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsFocused" Value="True">
                                 <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource PrimaryBg}" />
-                                <Setter TargetName="Border" Property="BorderThickness" Value="2" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" Value="0.5" />
@@ -312,8 +181,11 @@
             <selectors:InputTypeTemplateSelector.NormalTemplate>
                 <DataTemplate>
                     <TextBlock
-                        FontFamily="Inter"
+                        MaxWidth="420"
+                        FontFamily="Segoe UI"
                         FontSize="14"
+                        Foreground="#5F6368"
+                        LineHeight="20"
                         Text="{Binding DataContext.Message, RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}}"
                         TextWrapping="Wrap" />
                 </DataTemplate>
@@ -321,20 +193,42 @@
 
             <selectors:InputTypeTemplateSelector.InputTextTemplate>
                 <DataTemplate>
-                    <TextBox
-                        behaviors:FocusExtension.IsFocused="True"
-                        Style="{StaticResource ModernTextBox}"
-                        Text="{Binding DataContext.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}}" />
+                    <StackPanel>
+                        <TextBlock
+                            MaxWidth="420"
+                            Margin="0,0,0,8"
+                            FontFamily="Segoe UI"
+                            FontSize="14"
+                            Foreground="#5F6368"
+                            LineHeight="20"
+                            Text="{Binding DataContext.Message, RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}}"
+                            TextWrapping="Wrap" />
+                        <TextBox
+                            behaviors:FocusExtension.IsFocused="True"
+                            Style="{StaticResource ModernTextBox}"
+                            Text="{Binding DataContext.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}}" />
+                    </StackPanel>
                 </DataTemplate>
             </selectors:InputTypeTemplateSelector.InputTextTemplate>
 
             <selectors:InputTypeTemplateSelector.InputPasswordTemplate>
                 <DataTemplate>
-                    <PasswordBox
-                        behaviors:FocusExtension.IsFocused="True"
-                        behaviors:PasswordBoxHelper.BindPassword="True"
-                        behaviors:PasswordBoxHelper.BoundPassword="{Binding DataContext.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}}"
-                        Style="{StaticResource ModernPasswordBox}" />
+                    <StackPanel>
+                        <TextBlock
+                            MaxWidth="420"
+                            Margin="0,0,0,8"
+                            FontFamily="Segoe UI"
+                            FontSize="14"
+                            Foreground="#5F6368"
+                            LineHeight="20"
+                            Text="{Binding DataContext.Message, RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}}"
+                            TextWrapping="Wrap" />
+                        <PasswordBox
+                            behaviors:FocusExtension.IsFocused="True"
+                            behaviors:PasswordBoxHelper.BindPassword="True"
+                            behaviors:PasswordBoxHelper.BoundPassword="{Binding DataContext.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}}"
+                            Style="{StaticResource ModernPasswordBox}" />
+                    </StackPanel>
                 </DataTemplate>
             </selectors:InputTypeTemplateSelector.InputPasswordTemplate>
         </selectors:InputTypeTemplateSelector>
@@ -345,7 +239,8 @@
         <Border
             x:Name="Root"
             MinWidth="320"
-            MinHeight="220"
+            MaxWidth="500"
+            Margin="16"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             RenderTransformOrigin="0.5,0.5"
@@ -361,52 +256,60 @@
             <Border.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform x:Name="Scale" ScaleX="1" ScaleY="1" />
-                    <RotateTransform x:Name="Rotate" Angle="0" />
-                    <TranslateTransform x:Name="Translate" X="0" Y="0" />
                 </TransformGroup>
             </Border.RenderTransform>
 
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="8*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock
+                <StackPanel
                     Grid.Row="0"
-                    Margin="0,0,0,10"
-                    Padding="0,10,0,0"
-                    FontFamily="Inter"
-                    FontSize="18"
-                    FontWeight="Bold">
-                    <Run Foreground="{DynamicResource PrimaryBg}" Text="{Binding Type, Mode=OneWay, Converter={StaticResource DialogIconConverter}}" />
-                    <Run Foreground="{DynamicResource PrimaryBg}" Text="{Binding Title, Mode=OneWay}" />
-
-                </TextBlock>
+                    Margin="0,0,0,12"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="Segoe UI Emoji"
+                        FontSize="18"
+                        Foreground="{DynamicResource PrimaryBg}"
+                        Text="{Binding Type, Mode=OneWay, Converter={StaticResource DialogIconConverter}}" />
+                    <TextBlock
+                        MaxWidth="410"
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        FontFamily="Segoe UI"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Foreground="#202124"
+                        Text="{Binding Title, Mode=OneWay}"
+                        TextWrapping="Wrap" />
+                </StackPanel>
 
                 <ContentControl
-                    Grid.Row="2"
+                    Grid.Row="1"
                     Content="{Binding InputType}"
                     ContentTemplateSelector="{StaticResource MyInputTypeTemplateSelector}" />
 
 
                 <StackPanel
-                    Grid.Row="4"
+                    Grid.Row="2"
+                    Margin="0,14,0,0"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Orientation="Horizontal">
                     <Button
-                        MinWidth="80"
-                        Margin="5"
+                        x:Name="CancelButton"
+                        MinWidth="72"
+                        Margin="0,0,6,0"
                         Command="{Binding CancelCommand}"
                         IsCancel="True"
                         Style="{Binding RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}, Path=CancelButtonStyle}" />
                     <Button
-                        MinWidth="80"
-                        Margin="5"
+                        x:Name="ConfirmButton"
+                        MinWidth="72"
                         Command="{Binding ConfirmCommand}"
                         IsDefault="True"
                         Style="{Binding RelativeSource={RelativeSource AncestorType=local:ModernMessageBox}, Path=ConfirmButtonStyle}" />

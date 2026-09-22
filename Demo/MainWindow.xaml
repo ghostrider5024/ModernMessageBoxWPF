@@ -15,7 +15,12 @@
         </Style>
     </Window.Resources>
 
-    <Grid>
-        <Button Click="Button_Click">1232</Button>
-    </Grid>
+    <StackPanel>
+        <Button Click="Button_Click">Info</Button>
+        <Button Click="Button_Click_1">Success</Button>
+        <Button Click="Button_Click_2">Warning</Button>
+        <Button Click="Button_Click_3">Error</Button>
+        <Button Click="Button_Click_4">Input Text</Button>
+        <Button Click="Button_Click_5">Input Password</Button>
+    </StackPanel>
 </Window>
